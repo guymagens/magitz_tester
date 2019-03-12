@@ -1,0 +1,129 @@
+#!/bin/bash
+
+# HOWTO:
+# 0. Give this file execution permissions (chmod +x magitz_tester) and put it in the same dir with your program
+# 1. Make a directory named "test_inputs" in your program dir
+# 2. Fill it with test files (for example: echo "16 10    abef" > test1) 
+# 3. Make sure all the variables below are written correctly
+# 4. run ./magitz_tester and check your run_log
+
+INPUT_DIR="test_inputs"
+YOUR_PROG_NAME="ex1"
+REF_PROG_NAME="HW1"
+RUN_LOG="run_log"
+
+if [ ! -f "$YOUR_PROG_NAME" ]; then
+    echo "RUN FAILED: where's your compiled program?"
+    exit 1
+elif [ ! -f "$REF_PROG_NAME" ]; then
+    echo "RUN FAILED: where's the ref program?"
+    exit 1
+elif [ ! -d "$INPUT_DIR" ]; then
+    echo "RUN FAILED: no inputs directory"
+    exit 1
+fi
+
+if [ -f "$RUN_LOG" ]; then
+    rm $RUN_LOG
+fi
+
+
+
+echo "       __                                   __        __                               __  ______"
+echo "  ___ / /  ___ _    __  __ _  ___   _    __/ /  ___ _/ /_  __ _____  __ __  ___ ____  / /_/ / / /"
+echo " (_-</ _ \/ _ \ |/|/ / /  ' \/ -_) | |/|/ / _ \/ _ \/ __/ / // / _ \/ // / / _ \/ _ \/ __/_/_/_/"
+echo "/___/_//_/\___/__,__/ /_/_/_/\__/  |__,__/_//_/\_,_/\__/  \_, /\___/\_,_/  \_, /\___/\__(_|_|_)"
+echo "                                                         /___/            /___/                  "
+echo "        ___          "
+echo "    . -^   '--,      "
+echo "   /# ========='-_   "
+echo "  /# (--====___====\ "
+echo " /#   .- --.  . --.| "
+echo "/##   |  * ) (   * ),"
+echo "|##   \    /\ \   / |"
+echo "|###   ---   \ ---  |"
+echo "|####      ___)    #|"
+echo "|######           ##|"
+echo " \##### ---------- / "
+echo "  \####           (  "
+echo "   \###          |  "
+echo "     \###         |  "
+echo "      \##        |   "
+echo "       \###.    .)   "
+echo "        \======/ "
+total_tests=0
+successful_runs=0
+for file in $INPUT_DIR/*; do
+    let "total_tests += 1"
+    echo "Starting test #$total_tests" >> "$RUN_LOG"
+    filename="${file##*/}"
+    ./${YOUR_PROG_NAME} < "$file" > "your_log"
+    ./${REF_PROG_NAME} < "$file" > "ref_log"
+    DIFF=$(diff "ref_log" "your_log")
+    if [ "$DIFF" == "" ]; then
+        echo "File $filename passed!" >> "$RUN_LOG"
+        let "successful_runs += 1"
+    else
+        echo "***ERROR***" >> "$RUN_LOG"
+        echo "Test file $filename failed, diff's output:" >> "$RUN_LOG"
+        echo $DIFF >> "$RUN_LOG"
+        echo "Test contained:" >> "$RUN_LOG"
+        cat $file >> "$RUN_LOG"
+        echo "***********" >> "$RUN_LOG"
+    fi
+done
+echo "   __              _               __        __                               __  _"
+echo "  / /  ___ _______( )___   _    __/ /  ___ _/ /_  __ _____  __ __  ___ ____  / /_(_)"
+echo " / _ \/ -_) __/ -_)/(_-<  | |/|/ / _ \/ _ \/ __/ / // / _ \/ // / / _ \/ _ \/ __/"
+echo "/_//_/\__/_/  \__/ /___/  |__,__/_//_/\_,_/\__/  \_, /\___/\_,_/  \_, /\___/\__(_)"
+echo "                                                /___/            /___/"
+rm "your_log" "ref_log"
+if [ $successful_runs -ne $total_tests ]; then
+    sed -i "1s/^/Got $successful_runs out of $total_tests, back to work!\n/" "$RUN_LOG"
+    printf "Finished $total_tests runs \nCheck your run log, BTW, you failed \n"
+    echo "        ___          "
+    echo "    . -^   '--,      "
+    echo "   /# ========='-_   "
+    echo "  /# (--====___====\ "
+    echo " /#   .- --.  . --.| "
+    echo "/##   |  * ) (   * ),"
+    echo "|##   \    /\ \   / |"
+    echo "|###   ---   \ ---  |"
+    echo "|####      ___)    #|"
+    echo "|######           ##|"
+    echo " \#####    ___     / "
+    echo "  \####   /   \   (  "
+    echo "   \###          |  "
+    echo "     \###         |  "
+    echo "      \##        |   "
+    echo "       \###.    .)   "
+    echo "        \======/ "
+    exit 0
+else
+    sed -i "1s/^/YOU'VE BEATEN ALL THE $total_tests CORRECTLY\n/" "$RUN_LOG"
+    printf "Finished $total_tests runs\nCheck your run log, BTW, you passed! \n"
+    echo "        ___          "
+    echo "    . -^   '--,      "
+    echo "   /# ========='-_   "
+    echo "  /# (--====___====\ "
+    echo " /#   .- --.  . --.| "
+    echo "/##   |  * ) (   * ),"
+    echo "|##   \    /\ \   / |"
+    echo "|###   ---   \ ---  |"
+    echo "|####      ___)    #|"
+    echo "|######           ##|"
+    echo " \#####   \___/    / "
+    echo "  \####           (  "
+    echo "   \###          |  "
+    echo "     \###         |  "
+    echo "      \##        |   "
+    echo "       \###.    .)   "
+    echo "        \======/ "
+    exit 0
+fi
+
+
+
+
+# GITZ<guymagen@mail.tau.ac.il>
+ 
