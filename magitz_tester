@@ -99,7 +99,7 @@ if [ $successful_runs -ne $total_tests ]; then
     echo "        \======/ "
     exit 0
 else
-    sed -i "1s/^/YOU'VE BEATEN ALL THE $total_tests CORRECTLY\n/" "$RUN_LOG"
+    sed -i "1s/^/YOU'VE BEATEN ALL THE $total_tests tests CORRECTLY\n/" "$RUN_LOG"
     printf "Finished $total_tests runs\nCheck your run log, BTW, you passed! \n"
     echo "        ___          "
     echo "    . -^   '--,      "
