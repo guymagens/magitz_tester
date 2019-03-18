@@ -68,7 +68,7 @@ for file in $INPUT_DIR/*; do
         echo $DIFF >> "$RUN_LOG"
         echo "Test contained:" >> "$RUN_LOG"
         cat $file >> "$RUN_LOG"
-        echo "***********" >> "$RUN_LOG"
+        printf "\n***********\n" >> "$RUN_LOG"
     fi
 done
 echo "   __              _               __        __                               __  _"
