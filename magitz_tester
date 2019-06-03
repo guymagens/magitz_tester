@@ -57,8 +57,8 @@ for file in $INPUT_DIR/*; do
     let "total_tests += 1"
     echo "Starting test #$total_tests" >> "$RUN_LOG"
     filename="${file##*/}"
-    ./${YOUR_PROG_NAME} 42 < "$file" > "your_log"
-    ./${REF_PROG_NAME} 42 < "$file" > "ref_log"
+    ./${YOUR_PROG_NAME} < "$file" > "your_log"
+    ./${REF_PROG_NAME} < "$file" > "ref_log"
     if diff -rq "ref_log" "your_log" >> /dev/null; then
         echo "File $filename passed!" >> "$RUN_LOG"
         let "successful_runs += 1"
