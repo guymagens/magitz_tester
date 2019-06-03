@@ -1,14 +1,15 @@
 #!/bin/bash
 
-# 0. Add execution permissions to magitz_tester and to the executables (chmod +x magitz_tester) and put them in the same directory
-# 1. Make a directory named "test_inputs" in your program's directory
-# 2. Fill it with test files (for example: echo "16 10 abef" > test1)
-# 3. Make sure all the variables inside the script are written correctly
+# HOWTO:
+# 0. Give this file execution permissions (chmod +x magitz_tester) and put it in the same dir with your program
+# 1. Make a directory named "test_inputs" in your program dir
+# 2. Fill it with test files (for example: echo "16 10    abef" > test1) 
+# 3. Make sure all the variables below are written correctly
 # 4. run ./magitz_tester and check your run_log
 
-INPUT_DIR="test_inputs"
-YOUR_PROG_NAME="ex1"
-REF_PROG_NAME="HW1"
+INPUT_DIR="tests"
+YOUR_PROG_NAME="sudoku"
+REF_PROG_NAME="HW3.dms"
 RUN_LOG="run_log"
 
 if [ ! -f "$YOUR_PROG_NAME" ]; then
@@ -56,19 +57,18 @@ for file in $INPUT_DIR/*; do
     let "total_tests += 1"
     echo "Starting test #$total_tests" >> "$RUN_LOG"
     filename="${file##*/}"
-    ./${YOUR_PROG_NAME} < "$file" > "your_log"
-    ./${REF_PROG_NAME} < "$file" > "ref_log"
-    DIFF=$(diff "ref_log" "your_log")
-    if [ "$DIFF" == "" ]; then
+    ./${YOUR_PROG_NAME} 42 < "$file" > "your_log"
+    ./${REF_PROG_NAME} 42 < "$file" > "ref_log"
+    if diff -rq "ref_log" "your_log" >> /dev/null; then
         echo "File $filename passed!" >> "$RUN_LOG"
         let "successful_runs += 1"
     else
         echo "***ERROR***" >> "$RUN_LOG"
         echo "Test file $filename failed, diff's output:" >> "$RUN_LOG"
-        echo $DIFF >> "$RUN_LOG"
+        diff -c "ref_log" "your_log" >> "$RUN_LOG"
         echo "Test contained:" >> "$RUN_LOG"
         cat $file >> "$RUN_LOG"
-        printf "\n***********\n" >> "$RUN_LOG"
+        echo "\n***********" >> "$RUN_LOG"
     fi
 done
 echo "   __              _               __        __                               __  _"
@@ -99,7 +99,7 @@ if [ $successful_runs -ne $total_tests ]; then
     echo "        \======/ "
     exit 0
 else
-    sed -i "1s/^/YOU'VE BEATEN ALL THE $total_tests tests CORRECTLY\n/" "$RUN_LOG"
+    sed -i "1s/^/YOU'VE BEATEN ALL THE $total_tests CORRECTLY\n/" "$RUN_LOG"
     printf "Finished $total_tests runs\nCheck your run log, BTW, you passed! \n"
     echo "        ___          "
     echo "    . -^   '--,      "
